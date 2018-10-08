@@ -135,8 +135,16 @@ class FaceDetector
         return ($this->face['w'] > 0);
     }
 
-
-    public function toJpeg()
+    /**
+     * Marks the face in the photo.
+     * Should be called after `faceDetect` function call
+     * If file is provided, the new photo will be stored in file, other way it will be output to standard output.
+     *
+     * @param string|null $outFileName file name to store. If null, will be printed to output
+     *
+     * @throws NoFaceException
+     */
+    public function toJpeg($outFileName = null)
     {
         $color = imagecolorallocate($this->canvas, 255, 0, 0); //red
 
@@ -149,8 +157,12 @@ class FaceDetector
             $color
         );
 
-        header('Content-type: image/jpeg');
-        imagejpeg($this->canvas);
+        if ( $outFileName === null ) {
+            header('Content-type: image/jpeg');
+            imagejpeg($this->canvas);
+        } else {
+            imagejpeg($this->canvas, $outFileName);
+        }
     }
 
     /**
